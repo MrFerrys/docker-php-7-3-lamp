@@ -1,0 +1,47 @@
+#Docker container with php-7-4, apache, phpmyadmin & mariadb 
+version: "3.7"
+
+services:
+  php:
+    build:
+     context: ./
+     dockerfile: php7.Dockerfile
+    container_name: php-7-server
+    
+    ports:
+     - 3000:80
+    volumes:
+     - ./html_php_7:/var/www/html
+    environment:
+      DB_HOST: mariadb
+      DB_USER: root
+      DB_PASSWORD: secret
+      #MYSQL_HOST: mysql
+      #MYSQL_USER: root
+      #MYSQL_PASSWORD: secret
+      #MYSQL_DB: todos
+  mariadb:
+    container_name: mariadb_service_php7
+    #restart: always
+    image: mariadb:10.6.5
+    volumes:
+      - mariadb-data:/var/lib/mysql
+    environment:
+      #MYSQL_ROOT_USER: root
+      MYSQL_ROOT_PASSWORD: secret
+      MYSQL_ROOT_HOST: '%'
+    
+  phpmyadmin:
+        container_name: phpmyadmin_service_php7
+        #restart: always
+        image: phpmyadmin:5.1
+        ports:
+            - 3004:80
+        environment:
+            PMA_HOST: mariadb
+
+volumes:
+  mariadb-data:
+  html_php_7:
+  
+  
